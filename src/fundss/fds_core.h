@@ -4,6 +4,10 @@
 #ifndef _FDS_CORE_H_
 #define _FDS_CORE_H_
 
+#include <ngx_config.h>
+#include <ngx_core.h>
+
+#define FDS_MODULE	0xAEAEEAEA
 #define FDS_POOL_DEFAULT_SIZE 2048
 
 typedef struct {
