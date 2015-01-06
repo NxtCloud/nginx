@@ -48,6 +48,8 @@ USE_THREADS=NO
 NGX_FILE_AIO=NO
 NGX_IPV6=NO
 
+FUNDSS=YES
+
 HTTP=YES
 
 NGX_HTTP_LOG_PATH=
@@ -356,6 +358,7 @@ cat << END
 
   --with-file-aio                    enable file AIO support
   --with-ipv6                        enable IPv6 support
+  --with-fundss_zookeeper            enable zookeeeper for fundss
 
   --with-http_ssl_module             enable ngx_http_ssl_module
   --with-http_spdy_module            enable ngx_http_spdy_module
