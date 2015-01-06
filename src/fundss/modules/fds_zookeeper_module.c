@@ -1,32 +1,34 @@
 #include<zookeeper/zookeeper.h>
 #include"fds_cluster.h"
 
+
+#define MAX_PATH_LEN 100
 typedef struct String_vector vector_t;
 
-static inline ZOOAPI ngx_int_t zookeeper_create_node(ngx_str_t *path, ngx_int_t flag);
-static inline ZOOAPI ngx_int_t zookeeper_delete_node(ngx_str_t *path);
-static inline ZOOAPI ngx_int_t zookeeper_exists_node(ngx_str_t *path);
-static inline ZOOAPI ngx_int_t zookeeper_get_childrens(ngx_str_t *path, vector_t *strings);
+static inline ZOOAPI int zookeeper_create_node(const char *path, int flag);
+static inline ZOOAPI int zookeeper_delete_node(const char *path);
+static inline ZOOAPI int zookeeper_exists_node(const char *path);
+static inline ZOOAPI int zookeeper_get_childrens(const char *path, vector_t *strings);
 
 
 static zhandle_t *zhandle;
 
-static inline void fds_cluster_init(ngx_str_t *zk_host){
-	ngx_int_t rc;
+static inline void fds_cluster_init(const char *zk_host){
+	int rc;
 
 	zhandle = zookeeper_init(zk_host, NULL, 10000, NULL, "fundss zookeeper", 0);
 	if (!zhandle){
-		prngx_int_tf("error\n");
+		printf("error\n");
 		goto out;
 		
 	}
 	
-	ngx_int_t ngx_int_terval = 100, retry = 0;
+	int interval = 100, retry = 0;
 	
-        ngx_int_t max_retry = 1000 / ngx_int_terval;
+        int max_retry = 1000 / interval;
         while (zoo_state(zhandle) != ZOO_CONNECTED_STATE) {
-		prngx_int_tf("retry ...");		
-                usleep(ngx_int_terval * 1000);
+		printf("retry ...");		
+                usleep(interval * 1000);
                 if (++retry >= max_retry) {
 			goto out;
                 }
@@ -41,48 +43,48 @@ out:
 
 void fds_cluster_join(fds_node_t *node){	
 	
-	ngx_str_t path;
+	char path[MAX_PATH_LEN];
 	
-	snprngx_int_tf(path, 100, BASE_ZNODE"/%s",node->address);
-	prngx_int_tf("%s join...\n", node->address);
-	prngx_int_tf("%s\n",path);
-	ngx_int_t rc =  zookeeper_create_node(path, ZOO_EPHEMERAL);
-	prngx_int_tf("rc = %d, a = %d\n",rc, ZNOCHILDRENFOREPHEMERALS);
+	snprintf(path, MAX_PATH_LEN, BASE_ZNODE"/%s",node->address);
+	printf("%s join...\n", node->address);
+	printf("%s\n",path);
+	int rc =  zookeeper_create_node(path, ZOO_EPHEMERAL);
+	printf("rc = %d, a = %d\n",rc, ZNOCHILDRENFOREPHEMERALS);
 
 }
 
 void fds_cluster_leave(fds_node_t *node){
 
-	ngx_str_t path;
-	snprngx_int_tf(path,100,BASE_ZNODE"/%s",node->address);
-	ngx_int_t rc = zookeeper_delete_node(path);
+	char path[MAX_PATH_LEN];
+	snprintf(path, MAT_PATH_LEN,BASE_ZNODE"/%s",node->address);
+	int rc = zookeeper_delete_node(path);
 
 }
 
 
 void fds_cluster_get_nodes_info(){
 	struct vector_t strings;
-	ngx_int_t rc;	
+	int rc;	
 	rc = zookeeper_get_childrens(BASE_ZNODE, &strings);	
 	
-	prngx_int_tf("children count %d\n",strings.count); 
+	printf("children count %d\n",strings.count); 
 
 }
 
 
-static inline ZOOAPI ngx_int_t zookeeper_create_node(ngx_str_t *path, ngx_int_t flag)
+static inline ZOOAPI int zookeeper_create_node(const char *path, int flag)
 {
-        ngx_int_t rc;
+        int rc;
 	struct ACL_vector *ACL= &ZOO_OPEN_ACL_UNSAFE;
         do{
                 rc = zoo_create(zhandle, path, "", 0, ACL, flag, NULL, 0);
         } while (rc == ZOPERATIONTIMEOUT || rc == ZCONNECTIONLOSS);
         return rc; 
-	prngx_int_tf("%d\n",rc);
+	printf("%d\n",rc);
 }
 
-static inline ZOOAPI ngx_int_t zookeeper_delete_node(ngx_str_t *path){
-	ngx_int_t rc;
+static inline ZOOAPI int zookeeper_delete_node(const char *path){
+	int rc;
 	do{
 		rc = zoo_delete(zhandle, path, 0);
 	}while(rc == ZOPERATIONTIMEOUT || rc == ZCONNECTIONLOSS );
@@ -91,8 +93,8 @@ static inline ZOOAPI ngx_int_t zookeeper_delete_node(ngx_str_t *path){
 }
 
 
-static inline ZOOAPI ngx_int_t zookeeper_exists_node(ngx_str_t *path){
-	ngx_int_t rc;
+static inline ZOOAPI int zookeeper_exists_node(const char *path){
+	int rc;
 	struct Stat stat;
 	do{
 		rc = zoo_exists(zhandle, path, 0, &stat);
@@ -102,8 +104,8 @@ static inline ZOOAPI ngx_int_t zookeeper_exists_node(ngx_str_t *path){
 
 }
 
-static inline ZOOAPI ngx_int_t zookeeper_get_childrens(ngx_str_t *path, struct vector_t *strings){
-	ngx_int_t rc;
+static inline ZOOAPI int zookeeper_get_childrens(const char *path, struct vector_t *strings){
+	int rc;
 	do{
 		rc = zoo_get_children(zhandle, path, 0, strings);
 	}while(rc == ZOPERATIONTIMEOUT || rc == ZCONNECTIONLOSS );
