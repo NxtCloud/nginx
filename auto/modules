@@ -492,6 +492,14 @@ if [ $MAIL = YES ]; then
     NGX_ADDON_DEPS="$NGX_ADDON_DEPS \$(MAIL_DEPS)"
 fi
 
+if [ $FUNDSS = YES ]; then
+    modules="$modules $FUNDSS_MODULES"
+    USE_ZOOKEEPER=YES 
+    USE_ZLIB=YES
+    NGX_ADDON_DEPS="$NGX_ADDON_DEPS \$(FUNDSS_DEPS)"
+fi
+
+
 
 if [ $NGX_GOOGLE_PERFTOOLS = YES ]; then
     modules="$modules $NGX_GOOGLE_PERFTOOLS_MODULE"

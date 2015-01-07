@@ -56,6 +56,13 @@ case $MD5 in
     *)     echo "  + using md5 library: $MD5" ;;
 esac
 
+case $ZOOKEEPER in
+    YES)   echo "  + zookeeper: using $ZOOKEEPER_LIB library" ;;
+    NONE)  echo "  + zookeeper library is not used" ;;
+    NO)    echo "  + using builtin zookeeper code" ;;
+    *)     echo "  + using zookeeper library: $ZOOKEEPER" ;;
+esac
+
 case $SHA1 in
     YES)   echo "  + sha1: using $SHA1_LIB library" ;;
     NONE)  echo "  + sha1 library is not used" ;;
