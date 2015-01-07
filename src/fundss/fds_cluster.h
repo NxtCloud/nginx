@@ -12,12 +12,12 @@ typedef struct fds_node_t fds_node_t;
 typedef struct fds_cluster_t fds_cluster_t;
 
 struct fds_node_t {
-	ngx_str_t address;
+	char *address;
 };
 
 
 struct fds_cluster_t {
-	ngx_str_t cluster_name;
+	char *cluster_name;
 	ngx_list_t *nodes;
 };
 
