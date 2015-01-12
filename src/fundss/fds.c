@@ -3,8 +3,7 @@
 */
 #include <ngx_config.h>
 #include <ngx_core.h>
-#include <fds_core.h>
-#include <fds_request.h>
+#include <fds.h>
 
 static char *fds_block(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 

@@ -11,6 +11,13 @@
 
 #define FDS_MODULE		0x00555244
 #define FDS_MAIN_CONF		0x02000000
+#define FDS_SRV_CONF    0x04000000
+#define FDS_MAIN_CONF_OFFSET  offsetof(fds_conf_ctx_t, main_conf)
+#define FDS_SRV_CONF_OFFSET   offsetof(fds_conf_ctx_t, srv_conf)
+#define fds_conf_get_module_main_conf(cf, module)                       \
+    ((fds_conf_ctx_t *) cf->ctx)->main_conf[module.ctx_index]
+#define fds_conf_get_module_srv_conf(cf, module)                        \
+    ((fds_conf_ctx_t *) cf->ctx)->srv_conf[module.ctx_index]
 typedef struct {
 	void			**main_conf;
 	void			**srv_conf;
@@ -119,4 +126,6 @@ typedef struct {
     char                       *(*merge_srv_conf)(ngx_conf_t *cf, void *prev,
                                       void *conf);
 } fds_module_t;
+extern ngx_uint_t fds_max_module;
+extern ngx_module_t fds_core_module;
 #endif

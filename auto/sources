@@ -515,14 +515,13 @@ HTTP_UPSTREAM_KEEPALIVE_SRCS=" \
     src/http/modules/ngx_http_upstream_keepalive_module.c"
 
 
-FUNDSS_MODULES="fds_module"
+FUNDSS_MODULES="fds_module fds_core_module"
 
 FUNDSS_INCS="src/fundss"
-FUNDSS_DEPS="src/fundss/fds_cluster.h \
-	     src/fundss/fds_object.h"
+FUNDSS_DEPS="src/fundss/fds.h"
 
-FUNDSS_SRCS="src/fundss/fds_core.c \
-             src/fundss/modules/fds_zookeeper_module.c"
+FUNDSS_SRCS="src/fundss/fds.c \
+             src/fundss/fds_core_module.c"
 
 
 MAIL_INCS="src/mail"
